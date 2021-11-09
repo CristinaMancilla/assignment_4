@@ -1,0 +1,78 @@
+---
+title: "cristina_mancilla_snowshoe_report"
+author: "Cristina"
+date: "11/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+### Introduction 
+
+
+
+#### Data Analysis 
+
+## Juvenile Hare Initial Investigation 
+
+```{r}
+# read in the needed packages
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+library(lubridate)
+library(dplyr)
+
+```
+
+```{r}
+# read in data using the here() and clean up the names 
+
+hares <- read_csv(here("data", "bonanza_hares.csv")) %>% 
+  clean_names()
+
+hare_year <- hares %>% 
+  mutate(date_year = mdy(date)) %>% 
+  mutate(year_new = year(date_year)) %>% 
+  
+  select(age, year_new) %>% 
+  filter(age %in% c("j"))
+
+```
+
+```{r}
+ggplot(data = hare_year, aes(x = year_new)) +
+  geom_histogram(bins=15, fill = "slateblue1", color = "black") +
+  labs ( x = "Year", 
+         y = "Count of Juvenile Hares", 
+         title = "Annual Juvenile Hare Trap Counts") + 
+  theme_bw()
+
+```
+
+```{r}
+hare_sum <- hare_year %>% 
+  group_by(year_new) %>%
+  count(age) 
+
+```
+
+```{r}
+mean_hare <- c(126, 67, 22, 18, 8, 48, 13, 5, 44, 2, 19, 6)
+result.mean <- mean(mean_hare)
+print(result.mean)
+
+result.median <- median(mean_hare)
+print(result.median)
+```
+
+```
+## Snowshoe hares were trapped between 1999 and 2012. The most juvenile hare trapped in this sampling period was 126 in 1999 and the lowest was 2 in 2010. The mean number of hares trapped accross years was 31.5 and the median number of hares trapped was 18.5. Overall, there is a decrease in hare trappings from 1999 to 2012. although it seems like the juvenile snowshoe population is decreasing overtime, it's important to note that this trend may be due to sampling effort. In order to better represent that state of the snowshow population, field scientists should standardize their sampling efforts by keeping the number of observers consistent, the number of sampling days, amount of time spent sampling, and the number of traps used. 
+
+
+
+
